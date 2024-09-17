@@ -1,16 +1,11 @@
-{ username, config, pkgs, ... }:
+{ username, ... }:
 
 {
   home.username = username;
   home.homeDirectory = "/home/${username}";
-  home.stateVersion = "24.05"; # Please read the comment before changing.
+  home.stateVersion = "24.05";
 
-  home.packages = with pkgs; [
-		neovim
-
-    (pkgs.nerdfonts.override { fonts = [ "Monaspace" "JetBrainsMono" ]; })
-
-  ];
+  targets.genericLinux.enable = true;
 
   home.sessionVariables = {
     EDITOR = "nvim";
@@ -18,4 +13,10 @@
   };
 
   programs.home-manager.enable = true;
+
+  imports = [
+		./git.nix
+		./shell.nix
+		./package.nix
+	];
 }
