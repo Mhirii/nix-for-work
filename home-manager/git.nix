@@ -11,6 +11,12 @@
           editor = "nvim";
           pager = "${pkgs.delta}/bin/delta";
         };
+				credential = {
+					"https://github.com".helper = "!${pkgs.gh}/bin/gh auth git-credential";
+					"https://gist.github.com".helper = "!${pkgs.gh}/bin/gh auth git-credential";
+					"https://gitlab.com".helper = "!${pkgs.glab}/bin/glab auth git-credential";
+					helper = "store";
+				};
       };
       delta = {
         enable = true;
