@@ -5,7 +5,7 @@
       gaps_in = 4;
       gaps_out = 4;
       border_size = 3;
-      "col.active_border" = lib.mkDefault "#92A9FF 45deg";
+      "col.active_border" = lib.mkDefault "92a9ff 45deg";
       "col.inactive_border" = lib.mkDefault "rgba(00000000)";
     };
     misc = {
@@ -37,7 +37,7 @@
       drop_shadow = false;
       shadow_range = 10;
       shadow_render_power = 10;
-      "col.shadow" = lib.mkDefault "rgba(0F1B2E70)";
+      "col.shadow" = lib.mkDefault "rgba(10151d70)";
     };
 
     animations = {
