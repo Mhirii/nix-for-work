@@ -32,27 +32,39 @@ check_and_install_with_apt() {
 	check_and_install "$package" "sudo apt install $package"
 }
 
-if [ ! -x "$(command -v nix)" ]; then
-	check_and_install_with_apt "curl"
+install_deps_apt() {
+	local packages=("git" "curl")
+	for package in "${packages[@]}"; do
+		check_and_install_with_apt "$package"
+	done
+}
 
-	check_and_install "nix" "curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install || exit_error 'Failed to install Nix'"
+install_nix() {
+	curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+}
+
+install_home_manager() {
+	nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+	nix-channel --update
+	nix-shell '<home-manager>' -A install
+}
+
+# ==============
+# ==== MAIN ====
+# ==============
+
+install_deps_apt
+
+if [ ! -x "$(command -v nix)" ]; then
+	install_nix || exit_error 'Failed to install Nix'
 fi
 
-debug_log "Nix installed!"
-
-check_and_install_with_apt "git"
+if [ ! -x "$(command -v home-manager)" ]; then
+	install_home_manager || exit_error 'Failed to install Home Manager'
+fi
 
 if [ -d ~/nix ]; then
 	debug_log "$HOME/nix directory exists"
 	announce "Moving existing nix directory to nix-bak_$(date +'%d-%m')"
 	mv ~/nix ~/nix-bak_"$(date +'%d-%m')"
 fi
-
-debug_log "Cloning repository..."
-git clone "$repo" ~/nix || exit_error "Failed to clone repository"
-debug_log "Repository cloned!"
-
-debug_log "Building flake..."
-nix run nixpkgs#home-manager -- switch --flake nix/#"$USER" || exit_error "Failed to build flake"
-debug_log "Flake built!"
-announce "Installation complete!"

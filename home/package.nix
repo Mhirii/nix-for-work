@@ -2,8 +2,8 @@
 {
   home.packages = with pkgs;[
     neovim
-		tmux
 		neovide
+		tmux
 
 		lazydocker
 		docker
@@ -20,10 +20,11 @@
 
     ripgrep
     fd
+    less
 
     nixpkgs-fmt
 
-    less
+    cliphist
 
     (pkgs.nerdfonts.override { fonts = [ "Monaspace" "JetBrainsMono" ]; })
   ];

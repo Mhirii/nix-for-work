@@ -1,4 +1,4 @@
-{ username, ... }:
+{ config, pkgs, username, ... }:
 
 {
   home.username = username;
@@ -7,16 +7,23 @@
 
   targets.genericLinux.enable = true;
 
+	nixpkgs.config.allowUnfree = true;
+
   home.sessionVariables = {
     EDITOR = "nvim";
     VISUAL = "nvim";
   };
 
-  programs.home-manager.enable = true;
-
   imports = [
 		./git.nix
 		./shell.nix
 		./package.nix
+		./kitty.nix
+		./desktop
 	];
+
+  programs.home-manager.enable = true;
+
+	# will update font cache when needed
+	fonts.fontconfig.enable = true;
 }

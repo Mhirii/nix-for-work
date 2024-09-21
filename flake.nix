@@ -7,9 +7,10 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+		hyprland.url = "github:hyprwm/Hyprland";
   };
 
-  outputs = { nixpkgs, home-manager, ... }:
+  outputs = { self, nixpkgs, home-manager, hyprland, ... }:
     let
       system = "x86_64-linux";
       username = "dell";
@@ -26,12 +27,15 @@
 					substituters = [ "https://nix-gaming.cachix.org" ];
 				};
 			};
-			nixpkgs.config.allowUnfree = true;
 
       homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
-        modules = [ (.home-manager/home.nix // { extraSpecialArgs = { inherit username; }; }) ];
+        modules = [
+					.home/home.nix
+					hyprland.homeManagerModules.default
+				];
+				extraSpecialArgs = { inherit username; };
       };
     };
 }
